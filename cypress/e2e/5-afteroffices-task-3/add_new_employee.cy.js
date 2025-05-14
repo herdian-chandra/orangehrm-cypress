@@ -1,6 +1,12 @@
 // test data
+const testData = require("../../fixtures/test-data/test_data");
+
 let username = "Admin";
 let password = "admin123";
+let randomFirstName = testData.randomFirstName;
+let randomLastName = testData.randomLastName;
+let randomEmpId = testData.randomEmpId;
+let randomUsername = testData.randomUsername;
 
 //------------- locator -------------//
 /**
@@ -59,6 +65,7 @@ describe("Basic UI Automation, OrangeHRM", async function () {
     cy.visit(
       "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
     );
+    cy.wait(1000);
   });
 
   it("Add New Employee", async function () {
@@ -83,15 +90,15 @@ describe("Basic UI Automation, OrangeHRM", async function () {
     cy.xpath(firstNameAddEmployeeXpath)
       .should("be.visible")
       .clear()
-      .type("randomFN1");
+      .type(randomFirstName);
     cy.xpath(lastNameAddEmployeeXpath)
       .should("be.visible")
       .clear()
-      .type("randomLN1");
+      .type(randomLastName);
     cy.xpath(employeeIdAddEmployeeXpath)
       .should("be.visible")
       .clear()
-      .type("123162");
+      .type(randomEmpId);
     cy.xpath(buttonSaveAddEmployeeXpath).should("be.visible").click();
     await cy
       .xpath(titlePersonalDetailsXpath)
@@ -105,21 +112,24 @@ describe("Basic UI Automation, OrangeHRM", async function () {
     cy.xpath(titleAddUserXpath).should("be.visible").contains("Add User");
     cy.xpath(userRoleDropdownXpath).should("be.visible").click();
     cy.xpath(userRoleSelectXpath).contains("ESS").click();
-    cy.xpath(employeeNameXpath).should("be.visible").clear().type("randomFN1");
+    cy.xpath(employeeNameXpath)
+      .should("be.visible")
+      .clear()
+      .type(randomFirstName);
     // cy.xpath(suggestNameXPath).contains("randomFN1 randomLN1");
     cy.wait(1000);
-    cy.get(suggestNameXPath).contains("randomFN1 randomLN1").click();
+    cy.get(suggestNameXPath).contains(randomFirstName).click();
     cy.xpath(statusDropdownXpath).should("be.visible").click();
     cy.xpath(statusSelectXpath).contains("Enabled").click();
     cy.xpath(usernameAccountXpath)
       .should("be.visible")
       .clear()
-      .type("randomFN1uname1");
-    cy.xpath(setPasswordXpath).should("be.visible").clear().type("Asdf1234");
+      .type(randomUsername);
+    cy.xpath(setPasswordXpath).should("be.visible").clear().type("Asdf123!!");
     cy.xpath(setConfirmPasswordXpath)
       .should("be.visible")
       .clear()
-      .type("Asdf1234");
+      .type("Asdf123!!");
     cy.xpath(buttonSaveAddUserXpath).should("be.visible").click();
   });
 });
