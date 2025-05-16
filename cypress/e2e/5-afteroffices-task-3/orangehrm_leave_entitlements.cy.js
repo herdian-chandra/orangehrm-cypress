@@ -26,6 +26,8 @@ let firstNameAddEmployeeXpath = "//input[@placeholder='First Name']";
 let lastNameAddEmployeeXpath = "//input[@placeholder='Last Name']";
 let employeeIdAddEmployeeXpath =
   "//div[@class='oxd-input-group__label-wrapper']/following-sibling::div/input[@class='oxd-input oxd-input--active']";
+let employeeIdAlreadyExisthXpath =
+  "//span[contains(.,'Employee Id already exists')]";
 let buttonSaveAddEmployeeXpath =
   "//button[@type='submit' and contains(.,'Save')]";
 let titlePersonalDetailsXpath =
@@ -38,7 +40,7 @@ let titleAddUserXpath =
   "//h6[@class='oxd-text oxd-text--h6 orangehrm-main-title' and contains(.,'Add User')]";
 let userRoleDropdownXpath =
   "//div[@class='oxd-input-group__label-wrapper' and contains(.,'User Role')]/following-sibling::*//div[@class='oxd-select-text-input']";
-let userRoleSelectXpath = "//div[@role='option' and contains(.,'ESS')]";
+let userRoleSelectXpath = "//div[@role='option' and contains(.,'Admin')]";
 let employeeNameXpath = "//input[@placeholder='Type for hints...']";
 let statusDropdownXpath =
   "//div[@class='oxd-input-group__label-wrapper' and contains(.,'Status')]/following-sibling::*//div[@class='oxd-select-text-input']";
@@ -62,7 +64,6 @@ let selectAddEntitlementXpath =
   "*//ul/li/a[@role='menuitem' and contains(.,'Add Entitlements')]";
 let titleAddLeaveEntitlementXpath =
   "//p[@class='oxd-text oxd-text--p orangehrm-main-title']";
-// let employeeNameXpath = "//input[@placeholder='Type for hints...']"; //duplicate
 let suggestEmplyeeNameXpath =
   "//div[@role='option' and @class='oxd-autocomplete-option'][1]/span";
 let leaveTypeDropdownXpath =
@@ -72,7 +73,7 @@ let selectLeaveTypeDropdownXpath =
 let leavePeriodDropdownXpath =
   "//div[@class='oxd-input-group oxd-input-field-bottom-space' and contains(.,'Period')]/*//i";
 let selectLeavePeriodDropdownXpath =
-  "//div[@role='option' and @class='oxd-select-option']/span[contains(.,'2026-28-01 - 2027-27-01')]";
+  "(//div[@role='option' and @class='oxd-select-option']/span)[1]"; //always get the first order
 let ammountOfEntitlementXpath =
   "//div[@class='oxd-input-group__label-wrapper']/following-sibling::div/input";
 let buttonSaveAddEntitlementXpath = "//button[@type='submit']";
@@ -95,6 +96,7 @@ describe("Add New Employee, OrangeHRM", async function () {
     await cy.xpath(usernameXpath).should("be.visible").clear().type(username);
     await cy.xpath(passwordXpath).should("be.visible").clear().type(password);
     await cy.xpath(loginButtonXpath).should("be.visible").click();
+    cy.wait(3000); //hardwait
     await cy
       .xpath(titleDashboardXpath)
       .should("be.visible")
@@ -134,7 +136,7 @@ describe("Add New Employee, OrangeHRM", async function () {
     await cy.xpath(addButtonXpath).should("be.visible").click();
     await cy.xpath(titleAddUserXpath).should("be.visible").contains("Add User");
     await cy.xpath(userRoleDropdownXpath).should("be.visible").click();
-    await cy.xpath(userRoleSelectXpath).contains("ESS").click();
+    await cy.xpath(userRoleSelectXpath).contains("Admin").click();
     await cy
       .xpath(employeeNameXpath)
       .should("be.visible")
@@ -168,12 +170,13 @@ describe("Add New Employee, OrangeHRM", async function () {
     cy.wait(3000); //hardwait
   });
 
-  it("Add New Entitlement for New Employee Entitlement", async function () {
+  it("Add New Entitlement for New Employee", async function () {
     cy.wait(3000); //hardwait
     //--- login as an Admin ---//
     await cy.xpath(usernameXpath).should("be.visible").clear().type(username);
     await cy.xpath(passwordXpath).should("be.visible").clear().type(password);
     await cy.xpath(loginButtonXpath).should("be.visible").click();
+    cy.wait(3000); //hardwait
     await cy
       .xpath(titleDashboardXpath)
       .should("be.visible")
@@ -182,6 +185,7 @@ describe("Add New Employee, OrangeHRM", async function () {
     cy.wait(3000); //hardwait
     await cy.xpath(leaveMenuXpath).should("be.visible").click();
     await cy.xpath(entitlementDropdownXpath).should("be.visible").click();
+    cy.wait(3000); //hardwait
     await cy
       .xpath(selectAddEntitlementXpath)
       .contains("Add Entitlements")
@@ -196,6 +200,7 @@ describe("Add New Employee, OrangeHRM", async function () {
       .should("be.visible")
       .clear()
       .type(randomFirstName);
+    cy.wait(3000); //hardwait
     await cy.xpath(suggestEmplyeeNameXpath).contains(randomFirstName).click();
     await cy.xpath(leaveTypeDropdownXpath).should("be.visible").click();
     await cy.xpath(selectLeaveTypeDropdownXpath).click();
@@ -214,5 +219,90 @@ describe("Add New Employee, OrangeHRM", async function () {
       .xpath(titleLeaveEntitlementXpath)
       .should("be.visible")
       .contains("Leave Entitlements");
+  });
+
+  it("Can Not Add New Employee with Existing Employee Id", async function () {
+    cy.wait(3000); //hardwait
+    //--- login as an Admin ---//
+    await cy.xpath(usernameXpath).should("be.visible").clear().type(username);
+    await cy.xpath(passwordXpath).should("be.visible").clear().type(password);
+    await cy.xpath(loginButtonXpath).should("be.visible").click();
+    cy.wait(3000); //hardwait
+    await cy
+      .xpath(titleDashboardXpath)
+      .should("be.visible")
+      .contains("Dashboard");
+    //--- add new employee (PIM -> Add Employee) ---//
+
+    await cy.xpath(pimMenuXpath).should("be.visible").click();
+    await cy.xpath(addEmployeePimMenuXpath).should("be.visible").click();
+    await cy
+      .xpath(titleAddEmployeeXpath)
+      .should("be.visible")
+      .contains("Add Employee");
+    await cy
+      .xpath(firstNameAddEmployeeXpath)
+      .should("be.visible")
+      .clear()
+      .type("Test First Name");
+    await cy
+      .xpath(lastNameAddEmployeeXpath)
+      .should("be.visible")
+      .clear()
+      .type("Test Last Name");
+    await cy
+      .xpath(employeeIdAddEmployeeXpath)
+      .should("be.visible")
+      .clear()
+      .type(randomEmpId); // existing employee id
+    cy.wait(3000); //hardwait
+    await cy
+      .xpath(employeeIdAlreadyExisthXpath)
+      .should("be.visible")
+      .contains("Employee Id already exists");
+    // await cy.xpath(buttonSaveAddEmployeeXpath).should("be.visible").click();
+    cy.wait(3000); //hardwait
+    // await cy
+    //   .xpath(titlePersonalDetailsXpath)
+    //   .should("be.visible")
+    //   .contains("Personal Details");
+    // //--- create a new account from new employee (Admin -> Users -> Add) ---//
+    // cy.wait(3000); //hardwait
+    // await cy.xpath(adminMenuXpath).should("be.visible").click();
+    // await cy.xpath(addButtonXpath).should("be.visible").click();
+    // await cy.xpath(titleAddUserXpath).should("be.visible").contains("Add User");
+    // await cy.xpath(userRoleDropdownXpath).should("be.visible").click();
+    // await cy.xpath(userRoleSelectXpath).contains("Admin").click();
+    // await cy
+    //   .xpath(employeeNameXpath)
+    //   .should("be.visible")
+    //   .clear()
+    //   .type(randomFirstName);
+    // await cy.wait(1000);
+    // await cy.get(suggestNameXPath).contains(randomFirstName).click();
+    // await cy.xpath(statusDropdownXpath).should("be.visible").click();
+    // await cy.xpath(statusSelectXpath).contains("Enabled").click();
+    // await cy
+    //   .xpath(usernameAccountXpath)
+    //   .should("be.visible")
+    //   .clear()
+    //   .type(randomUsername);
+    // await cy
+    //   .xpath(setPasswordXpath)
+    //   .should("be.visible")
+    //   .clear()
+    //   .type("Asdf123!!");
+    // await cy
+    //   .xpath(setConfirmPasswordXpath)
+    //   .should("be.visible")
+    //   .clear()
+    //   .type("Asdf123!!");
+    // await cy.xpath(buttonSaveAddUserXpath).should("be.visible").click();
+    // cy.wait(3000); //hardwait
+    // await cy
+    //   .xpath(titleSystemUserXpath)
+    //   .should("be.visible")
+    //   .contains("System Users");
+    // cy.wait(3000); //hardwait
   });
 });
