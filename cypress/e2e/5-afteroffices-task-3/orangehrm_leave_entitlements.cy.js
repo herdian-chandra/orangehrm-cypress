@@ -233,7 +233,6 @@ describe("Add New Employee, OrangeHRM", async function () {
       .should("be.visible")
       .contains("Dashboard");
     //--- add new employee (PIM -> Add Employee) ---//
-
     await cy.xpath(pimMenuXpath).should("be.visible").click();
     await cy.xpath(addEmployeePimMenuXpath).should("be.visible").click();
     await cy
@@ -260,49 +259,5 @@ describe("Add New Employee, OrangeHRM", async function () {
       .xpath(employeeIdAlreadyExisthXpath)
       .should("be.visible")
       .contains("Employee Id already exists");
-    // await cy.xpath(buttonSaveAddEmployeeXpath).should("be.visible").click();
-    cy.wait(3000); //hardwait
-    // await cy
-    //   .xpath(titlePersonalDetailsXpath)
-    //   .should("be.visible")
-    //   .contains("Personal Details");
-    // //--- create a new account from new employee (Admin -> Users -> Add) ---//
-    // cy.wait(3000); //hardwait
-    // await cy.xpath(adminMenuXpath).should("be.visible").click();
-    // await cy.xpath(addButtonXpath).should("be.visible").click();
-    // await cy.xpath(titleAddUserXpath).should("be.visible").contains("Add User");
-    // await cy.xpath(userRoleDropdownXpath).should("be.visible").click();
-    // await cy.xpath(userRoleSelectXpath).contains("Admin").click();
-    // await cy
-    //   .xpath(employeeNameXpath)
-    //   .should("be.visible")
-    //   .clear()
-    //   .type(randomFirstName);
-    // await cy.wait(1000);
-    // await cy.get(suggestNameXPath).contains(randomFirstName).click();
-    // await cy.xpath(statusDropdownXpath).should("be.visible").click();
-    // await cy.xpath(statusSelectXpath).contains("Enabled").click();
-    // await cy
-    //   .xpath(usernameAccountXpath)
-    //   .should("be.visible")
-    //   .clear()
-    //   .type(randomUsername);
-    // await cy
-    //   .xpath(setPasswordXpath)
-    //   .should("be.visible")
-    //   .clear()
-    //   .type("Asdf123!!");
-    // await cy
-    //   .xpath(setConfirmPasswordXpath)
-    //   .should("be.visible")
-    //   .clear()
-    //   .type("Asdf123!!");
-    // await cy.xpath(buttonSaveAddUserXpath).should("be.visible").click();
-    // cy.wait(3000); //hardwait
-    // await cy
-    //   .xpath(titleSystemUserXpath)
-    //   .should("be.visible")
-    //   .contains("System Users");
-    // cy.wait(3000); //hardwait
   });
 });
