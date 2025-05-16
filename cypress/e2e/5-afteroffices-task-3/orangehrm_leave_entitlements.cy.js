@@ -70,9 +70,9 @@ let leaveTypeDropdownXpath =
 let selectLeaveTypeDropdownXpath =
   "//div[@role='option' and @class='oxd-select-option']/span[contains(.,'CAN - Personal')]";
 let leavePeriodDropdownXpath =
-  "//div[@class='oxd-input-group__label-wrapper']/following-sibling::div//*/div[@class='oxd-select-text-input' and contains(.,'2025-01-01 - 2025-24-08')]";
+  "//div[@class='oxd-input-group oxd-input-field-bottom-space' and contains(.,'Period')]/*//i";
 let selectLeavePeriodDropdownXpath =
-  "//div[@role='option' and @class='oxd-select-option']/span[contains(.,'2025-25-08 - 2026-24-08')]";
+  "//div[@role='option' and @class='oxd-select-option']/span[contains(.,'2026-28-01 - 2027-27-01')]";
 let ammountOfEntitlementXpath =
   "//div[@class='oxd-input-group__label-wrapper']/following-sibling::div/input";
 let buttonSaveAddEntitlementXpath = "//button[@type='submit']";
@@ -83,7 +83,6 @@ let titleLeaveEntitlementXpath = "//h5[contains(.,'Leave Entitlements')]";
 
 describe("Add New Employee, OrangeHRM", async function () {
   beforeEach(function () {
-    cy.wait(1000);
     cy.visit(
       "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
     );
@@ -101,7 +100,7 @@ describe("Add New Employee, OrangeHRM", async function () {
       .should("be.visible")
       .contains("Dashboard");
     //--- add new employee (PIM -> Add Employee) ---//
-    cy.wait(5000); //hardwait
+    cy.wait(3000); //hardwait
     await cy.xpath(pimMenuXpath).should("be.visible").click();
     await cy.xpath(addEmployeePimMenuXpath).should("be.visible").click();
     await cy
@@ -124,12 +123,13 @@ describe("Add New Employee, OrangeHRM", async function () {
       .clear()
       .type(randomEmpId);
     await cy.xpath(buttonSaveAddEmployeeXpath).should("be.visible").click();
+    cy.wait(3000); //hardwait
     await cy
       .xpath(titlePersonalDetailsXpath)
       .should("be.visible")
       .contains("Personal Details");
     //--- create a new account from new employee (Admin -> Users -> Add) ---//
-    cy.wait(5000); //hardwait
+    cy.wait(3000); //hardwait
     await cy.xpath(adminMenuXpath).should("be.visible").click();
     await cy.xpath(addButtonXpath).should("be.visible").click();
     await cy.xpath(titleAddUserXpath).should("be.visible").contains("Add User");
@@ -160,12 +160,12 @@ describe("Add New Employee, OrangeHRM", async function () {
       .clear()
       .type("Asdf123!!");
     await cy.xpath(buttonSaveAddUserXpath).should("be.visible").click();
-    cy.wait(5000); //hardwait
+    cy.wait(3000); //hardwait
     await cy
       .xpath(titleSystemUserXpath)
       .should("be.visible")
       .contains("System Users");
-    cy.wait(5000); //hardwait
+    cy.wait(3000); //hardwait
   });
 
   it("Add New Entitlement for New Employee Entitlement", async function () {
@@ -179,18 +179,18 @@ describe("Add New Employee, OrangeHRM", async function () {
       .should("be.visible")
       .contains("Dashboard");
     //--- Add Leave entitlement ---//
-    cy.wait(5000); //hardwait
+    cy.wait(3000); //hardwait
     await cy.xpath(leaveMenuXpath).should("be.visible").click();
     await cy.xpath(entitlementDropdownXpath).should("be.visible").click();
     await cy
       .xpath(selectAddEntitlementXpath)
       .contains("Add Entitlements")
       .click();
+    cy.wait(3000); //hardwait
     await cy
       .xpath(titleAddLeaveEntitlementXpath)
       .should("be.visible")
       .contains("Add Leave Entitlement");
-    cy.wait(5000); //hardwait
     await cy
       .xpath(employeeNameXpath)
       .should("be.visible")
@@ -207,13 +207,12 @@ describe("Add New Employee, OrangeHRM", async function () {
       .clear()
       .type("20");
     await cy.xpath(buttonSaveAddEntitlementXpath).should("be.visible").click();
-    cy.wait(5000); //hardwait
+    cy.wait(3000); //hardwait
     await cy.xpath(buttonConfirmXpath).should("be.visible").click();
-    cy.wait(5000); //hardwait
+    cy.wait(3000); //hardwait
     await cy
       .xpath(titleLeaveEntitlementXpath)
       .should("be.visible")
       .contains("Leave Entitlements");
-    cy.wait(5000); //hardwait
   });
 });
